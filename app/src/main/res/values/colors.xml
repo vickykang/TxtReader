@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#004d40</color>
+    <color name="colorAccent">#f44336</color>
+
+    <color name="divider">#e2e2e2</color>
+
+    <color name="text_subtitle">#999999</color>
+
+    <color name="text_import_dir">@color/text_subtitle</color>
+
+    <color name="text_load">#b2b2b2</color>
+
+    <color name="bg_cover">#4db6ac</color>
+    <color name="text_cover">#d2ffffff</color>
+
+    <color name="text_bottom_bar">#616161</color>
+
+    <color name="bg_read_page">#e5e5e5</color>
+</resources>

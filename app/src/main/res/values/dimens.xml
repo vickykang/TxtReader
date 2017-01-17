@@ -1,0 +1,48 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Font size -->
+    <dimen name="font_large">20dp</dimen>
+    <dimen name="font_normal">16dp</dimen>
+    <dimen name="font_small">12dp</dimen>
+    <dimen name="font_tiny">8dp</dimen>
+
+    <!-- read view text size -->
+    <dimen name="text_small">12dp</dimen>
+    <dimen name="text_normal">@dimen/font_normal</dimen>
+    <dimen name="text_large">24dp</dimen>
+
+    <dimen name="text_line_space_small">4dp</dimen>
+    <dimen name="text_line_space_normal">6dp</dimen>
+    <dimen name="text_line_space_large">10dp</dimen>
+
+    <dimen name="divider">1dp</dimen>
+
+    <!-- Margins -->
+    <dimen name="margin_big">18dp</dimen>
+    <dimen name="margin_normal">12dp</dimen>
+    <dimen name="margin_small">6dp</dimen>
+    <dimen name="margin_tiny">4dp</dimen>
+
+    <dimen name="toolbar_height">56dp</dimen>
+
+    <!-- cover -->
+    <dimen name="cover_width">100dp</dimen>
+    <dimen name="cover_height">140dp</dimen>
+    <dimen name="cover_height_with_space">156dp</dimen>
+    <dimen name="cover_pb_width">60dp</dimen>
+    <dimen name="cover_pb_height">5dp</dimen>
+    <dimen name="cover_vertical_space">16dp</dimen>
+    <dimen name="cover_horizontal_space">8dp</dimen>
+
+    <!-- Import books -->
+    <dimen name="ic_import_dir_height">16dp</dimen>
+    <dimen name="ic_import_dir_width">3dp</dimen>
+    <dimen name="divider_book_file">12dp</dimen>
+    <dimen name="ic_txt_size">42dp</dimen>
+
+    <dimen name="pb_width">48dp</dimen>
+
+</resources>

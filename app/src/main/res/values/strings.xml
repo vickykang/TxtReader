@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">TxtReader</string>
+    <string name="search">Search</string>
+    <string name="local_import">Import book</string>
+    <string name="disk">Disk</string>
+    <string name="scan_sdcard">Scan SDCard</string>
+    <string name="no_book_found">No book found</string>
+    <string name="import_book">Import</string>
+    <string name="imported">imported</string>
+
+    <string name="file_not_found">File not found</string>
+    <string name="read_failed">Reading failed</string>
+
+    <string name="loading_book">loading...</string>
+
+    <string name="no_books">Shelf is empty\nGo to import books</string>
+
+    <string-array name="delete_book_items">
+        <item>Move out of shelf</item>
+        <item>Move out of shelf and delete</item>
+        <item>Cancel</item>
+    </string-array>
+
+    <string name="untitled">Untitled</string>
+
+    <string name="category">category</string>
+    <string name="font">font</string>
+    <string name="settings">settings</string>
+</resources>

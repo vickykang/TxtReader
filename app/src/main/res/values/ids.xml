@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="action_search" type="id" />
+    <item name="action_import" type="id" />
+    <item name="toolbar" type="id" />
+    <item name="divider" type="id" />
+    <item name="icon" type="id" />
+    <item name="recycler_helper" type="id" />
+</resources>
