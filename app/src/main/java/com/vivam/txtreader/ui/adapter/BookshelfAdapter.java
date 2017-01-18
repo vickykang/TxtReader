@@ -44,7 +44,7 @@ public class BookshelfAdapter extends RecyclerView.Adapter<BookshelfAdapter.Hold
 
     @Override
     public int getItemCount() {
-        return mBooks.size();
+        return mBooks != null ? mBooks.size() : 0;
     }
 
     public class Holder extends RecyclerView.ViewHolder {

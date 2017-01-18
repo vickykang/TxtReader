@@ -1,5 +1,6 @@
 package com.vivam.txtreader.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
@@ -28,9 +29,11 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
 
+    private static final int REQUEST_READ = 1;
+
     private static final String BOOK_PATH =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
-                    "/心理罪1-画像.txt";
+            Environment.getExternalStoragePublicDirectory("Books") +
+                    "/心理罪1画像.txt";
 
     private Toolbar mToolbar;
     private RecyclerView mBookshelf;
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
         mAddButton.setOnClickListener(this);
         initBookshelf();
+        initData();
     }
 
     private void initBookshelf() {
@@ -61,10 +65,10 @@ public class MainActivity extends AppCompatActivity
         mBookshelf.setLayoutManager(new GridLayoutManager(this, spanCount));
         mBookshelf.setAdapter(mAdapter);
 
-        int width = getResources().getDisplayMetrics().widthPixels - mBookshelf.getPaddingEnd()
-                - mBookshelf.getPaddingEnd();
+        int width = getResources().getDisplayMetrics().widthPixels - mBookshelf.getPaddingLeft()
+                - mBookshelf.getPaddingRight();
         int itemWidth = getResources().getDimensionPixelSize(R.dimen.cover_width);
-        int hSpace = (width - itemWidth * spanCount) / spanCount;
+        int hSpace = (width - itemWidth * spanCount) / (spanCount);
         mBookshelf.addItemDecoration(new SpacesItemDecoration(hSpace,
                 getResources().getDimensionPixelSize(R.dimen.cover_vertical_space)));
 
@@ -76,7 +80,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        initData();
         notifyState();
     }
 
@@ -117,7 +120,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onItemClick(RecyclerView recyclerView, int position, View view) {
         if (mBooks != null && position < mBooks.size()) {
-
+            Intent intent = new Intent(this, ReadActivity.class);
+            intent.putExtra(ReadActivity.EXTRA_BOOK, mBooks.get(position));
+            startActivityForResult(intent, REQUEST_READ);
         }
     }
 

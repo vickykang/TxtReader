@@ -16,7 +16,7 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
     private int mVerticalSpace;
 
     public SpacesItemDecoration(int horizontalSpace, int verticalSpace) {
-        mHorizontalSpace = horizontalSpace;
+        mHorizontalSpace = horizontalSpace / 2;
         mVerticalSpace = verticalSpace;
     }
 
