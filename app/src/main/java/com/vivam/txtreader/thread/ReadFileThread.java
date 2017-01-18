@@ -64,6 +64,9 @@ public class ReadFileThread extends Thread {
         } catch (IOException e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
+
+        mHandler.obtainMessage(PaginateWork.MSG_START_PAGINATE, mChapters).sendToTarget();
+
         Log.i(TAG, "cost " + (SystemClock.currentThreadTimeMillis() - startTime) +
                 " ms to read file");
     }
@@ -88,8 +91,8 @@ public class ReadFileThread extends Thread {
             Log.i(TAG, "match chapter: " + name);
 
             if (start > 0) {
-                if (index > 0 && mChapters.size() >= index) {
-                    refreshChapter(mChapters.get(index - 1), start - 1,
+                if (index > 0 && mChapters.size() > 0) {
+                    refreshChapter(mChapters.get(mChapters.size() - 1), start - 1,
                             content.substring(offset, start - 1));
                 } else {
                     // The first part
@@ -100,14 +103,15 @@ public class ReadFileThread extends Thread {
                     chapter.setEnd(start - 1);
                     chapter.setIndex(mChapters.size());
                     mChapters.add(chapter);
-                    notifyChapterCompleted(chapter);
-
-                    // The second part, the first matched chapter
-                    mChapters.add(newChapter(name, start));
+                    // notifyChapterCompleted(chapter);
                 }
+
+                mChapters.add(newChapter(name, start));
             } else if (start == 0) {
+                // The first part, which is a matched chapter
                 mChapters.add(newChapter(name, start));
             }
+
             index++;
             offset = start + name.length();
         }
@@ -125,13 +129,12 @@ public class ReadFileThread extends Thread {
                 chapter.setStart(bytes.length);
                 chapter.setIndex(mChapters.size());
                 mChapters.add(chapter);
-                notifyChapterCompleted(chapter);
+                // notifyChapterCompleted(chapter);
             }
         }
     }
 
     private void notifyChapterCompleted(Chapter chapter) {
-        Log.i(TAG, "notifyChapterCompleted");
         mHandler.obtainMessage(PaginateWork.MSG_START_PAGINATE, chapter).sendToTarget();
     }
 
@@ -143,7 +146,7 @@ public class ReadFileThread extends Thread {
         } else {
             chapter.setContent(oldContent + newContent);
         }
-        notifyChapterCompleted(chapter);
+        // notifyChapterCompleted(chapter);
     }
 
     private Chapter newChapter(String name, int start) {

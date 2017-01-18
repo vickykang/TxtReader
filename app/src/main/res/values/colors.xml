@@ -18,4 +18,6 @@
     <color name="text_bottom_bar">#616161</color>
 
     <color name="bg_read_page">#e5e5e5</color>
+
+    <color name="text_content">#2e2e2e</color>
 </resources>
