@@ -1,6 +1,5 @@
 package com.vivam.txtreader.thread;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Layout;
@@ -9,9 +8,6 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.vivam.txtreader.data.EventBus;
-import com.vivam.txtreader.data.event.ChapterEvent;
-import com.vivam.txtreader.data.model.Book;
 import com.vivam.txtreader.data.model.Chapter;
 
 import java.util.ArrayList;
@@ -59,10 +55,10 @@ public class PaginateThread extends Thread {
 
         for (Chapter chapter : mChapters) {
             paginate(chapter);
-            mHandler.obtainMessage(PaginateWork.MSG_PAGINATED_ONE, chapter);
+            mHandler.obtainMessage(PaginateWork.MSG_PAGINATED_ONE, chapter).sendToTarget();
         }
 
-        Log.i(TAG, "pagination costs " + (SystemClock.currentThreadTimeMillis() - startTime));
+        Log.i(TAG, "costs " + (SystemClock.currentThreadTimeMillis() - startTime) + " ms to paginate");
     }
 
     private void paginate(Chapter chapter) {
@@ -72,10 +68,10 @@ public class PaginateThread extends Thread {
             chapter.setPages(pages);
         }
 
-        String name = chapter.getName().trim();
+        String name = chapter.getName();
         String content;
         if (!TextUtils.isEmpty(name)) {
-            content = name + "\n\n" + chapter.getContent();
+            content = name.trim() + "\n\n" + chapter.getContent();
         } else {
             content = chapter.getContent();
         }

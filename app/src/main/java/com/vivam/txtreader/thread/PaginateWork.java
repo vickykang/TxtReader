@@ -3,6 +3,7 @@ package com.vivam.txtreader.thread;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextPaint;
+import android.util.Log;
 
 import com.vivam.txtreader.data.EventBus;
 import com.vivam.txtreader.data.event.ChapterEvent;
@@ -65,9 +66,12 @@ public class PaginateWork {
                         mSpacingMulti, mSpacingExtra, mIncludeFontPadding, mHandler);
                 mPaginateThread.run();
                 return true;
+
             } else if (msg.what == MSG_PAGINATED_ONE) {
                 EventBus.post(new ChapterEvent((Chapter) msg.obj));
+                return true;
             }
+
             return false;
         }
     };

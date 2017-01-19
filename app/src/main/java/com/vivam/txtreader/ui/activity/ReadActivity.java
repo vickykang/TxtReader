@@ -9,10 +9,14 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
 import com.vivam.txtreader.R;
 import com.vivam.txtreader.data.EventBus;
+import com.vivam.txtreader.data.event.ChapterEvent;
 import com.vivam.txtreader.data.model.Book;
+import com.vivam.txtreader.data.model.Chapter;
 import com.vivam.txtreader.thread.PaginateWork;
+import com.vivam.txtreader.ui.adapter.PageAdapter;
 
 public class ReadActivity extends AppCompatActivity {
 
@@ -22,7 +26,7 @@ public class ReadActivity extends AppCompatActivity {
 
     private ViewPager mPager;
     private TextView mTextView;
-
+    private PageAdapter mAdapter;
     private PaginateWork mWork;
 
     private Book mBook;
@@ -42,6 +46,8 @@ public class ReadActivity extends AppCompatActivity {
             return;
         }
         initTextViewParams();
+        mAdapter = new PageAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mAdapter);
     }
 
     private void handleIntent(Intent intent) {
@@ -55,7 +61,7 @@ public class ReadActivity extends AppCompatActivity {
                 new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (mWork != null) {
+                if (mWork == null) {
                     int left = mTextView.getPaddingLeft();
                     int top = mTextView.getPaddingTop();
                     int right = mTextView.getPaddingRight();
@@ -76,6 +82,14 @@ public class ReadActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         EventBus.register(this);
+    }
+
+    @Subscribe
+    public void onPagesRefresh(ChapterEvent event) {
+        Chapter chapter = event.getChapter();
+        if (chapter != null) {
+            mAdapter.addAllPages(chapter.getPages());
+        }
     }
 
     @Override
