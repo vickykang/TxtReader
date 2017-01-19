@@ -26,4 +26,6 @@
     <string name="category">category</string>
     <string name="font">font</string>
     <string name="settings">settings</string>
+
+    <string name="loading_scan">Scanning...</string>
 </resources>

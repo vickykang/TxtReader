@@ -20,9 +20,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.ReadActivity">
+        <activity android:name=".ui.activity.ReadActivity" />
 
-        </activity>
+        <activity android:name=".ui.activity.ScanActivity"
+            android:label="@string/local_import" />
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.vivam.txtreader.utils;
 
+import android.os.Environment;
 import android.util.Log;
 
 import org.mozilla.universalchardet.UniversalDetector;
@@ -16,13 +17,35 @@ public class FileUtils {
 
     private static final String TAG = "FileUtils";
 
+    public static final int ONE_KB = 1024;
+
+    public static final int ONE_MB = ONE_KB * ONE_KB;
+
+    public static final int ONE_GB = ONE_MB * ONE_MB;
+
+    public static final File EXTERNAL_DIR = Environment.getExternalStorageDirectory();
+    public static final String EXTERNAL_PATH = EXTERNAL_DIR.getPath();
+    public static final String TXT_SUFFIX = ".txt";
+
+    /** The minimum size of book file */
+    public static final int MIN_FILE_SIZE = 10 * ONE_KB;
+
+    public static String getName(String path) {
+        String name = path;
+        int index = path.lastIndexOf(File.separatorChar);
+        if (index > -1 && index < path.length()) {
+            name = path.substring(index + 1);
+        }
+        return name;
+    }
+
     /**
      * Returns the name of the file, without suffix.
      *
      * @param path of file
      * @return name without suffix
      */
-    public static String getName(String path) {
+    public static String getNameWithoutSuffix(String path) {
         String name = path;
         int index = path.lastIndexOf(File.separatorChar);
         if (index > -1 && index < path.length()) {

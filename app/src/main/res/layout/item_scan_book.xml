@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/margin_normal"
+    android:paddingRight="@dimen/margin_normal"
+    android:descendantFocusability="blocksDescendants">
+
+    <ImageView
+        android:id="@id/icon"
+        android:layout_width="@dimen/ic_txt_size"
+        android:layout_height="@dimen/ic_txt_size"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginBottom="@dimen/margin_normal"
+        android:src="@drawable/ic_txt" />
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/icon"
+        android:layout_above="@id/divider"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_toLeftOf="@+id/state_layout"
+        android:layout_marginRight="@dimen/margin_small"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/Title" />
+
+        <TextView
+            android:id="@+id/tv_size"
+            style="@style/Subtitle"
+            android:layout_marginTop="@dimen/margin_tiny" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/state_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true">
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:button="@drawable/ic_check_box"
+            android:layout_gravity="end"/>
+
+        <TextView
+            android:id="@+id/tv_imported"
+            style="@style/Subtitle"
+            android:layout_gravity="end|center_vertical"
+            android:text="@string/imported" />
+
+    </FrameLayout>
+
+    <View
+        android:id="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider"
+        android:layout_toRightOf="@+id/icon"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="@color/divider"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

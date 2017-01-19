@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:id="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_book_file"
+        android:background="@color/divider" />
+
+    <TextView
+        android:id="@+id/tv_dir"
+        style="@style/Subtitle"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:gravity="center_vertical"
+        android:drawableStart="@drawable/ic_import_dir"
+        android:drawablePadding="@dimen/margin_small"/>
+
+</LinearLayout>

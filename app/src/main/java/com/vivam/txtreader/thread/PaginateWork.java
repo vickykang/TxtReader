@@ -47,7 +47,7 @@ public class PaginateWork {
     }
 
     public void start() {
-        mReadThread.run();
+        mReadThread.start();
     }
 
     public void stop() {
@@ -64,7 +64,7 @@ public class PaginateWork {
                 ArrayList<Chapter> chapters = (ArrayList<Chapter>) msg.obj;
                 mPaginateThread = new PaginateThread(chapters, mPaint, mWidth, mHeight,
                         mSpacingMulti, mSpacingExtra, mIncludeFontPadding, mHandler);
-                mPaginateThread.run();
+                mPaginateThread.start();
                 return true;
 
             } else if (msg.what == MSG_PAGINATED_ONE) {

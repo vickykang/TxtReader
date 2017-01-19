@@ -2,13 +2,9 @@ package com.vivam.txtreader.data.model;
 
 import java.util.ArrayList;
 
-public class Book extends BaseModel {
+public class Book extends BookFile {
 
-    String path;
-    String name;
     String charset;
-    long size;
-    int chapterSize;
     long createTime;
     long updateTime;
     ArrayList<Chapter> chapters;
@@ -16,20 +12,11 @@ public class Book extends BaseModel {
     public Book() {
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public Book(BookFile file) {
+        setName(file.getName());
+        setPath(file.getPath());
+        setSize(file.getSize());
+        setImported(file.isImported);
     }
 
     public String getCharset() {
@@ -40,20 +27,8 @@ public class Book extends BaseModel {
         this.charset = charset;
     }
 
-    public long getSize() {
-        return size;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
-    }
-
     public int getChapterSize() {
-        return chapterSize;
-    }
-
-    public void setChapterSize(int chapterSize) {
-        this.chapterSize = chapterSize;
+        return chapters != null ? chapters.size() : 0;
     }
 
     public long getCreateTime() {
