@@ -28,4 +28,6 @@
     <string name="settings">settings</string>
 
     <string name="loading_scan">Scanning...</string>
+
+    <string name="empty_folder">No files</string>
 </resources>

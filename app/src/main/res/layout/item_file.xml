@@ -52,13 +52,21 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:button="@drawable/ic_check_box"
-            android:layout_gravity="end"/>
+            android:layout_gravity="end" />
 
         <TextView
             android:id="@+id/tv_imported"
             style="@style/Subtitle"
             android:layout_gravity="end|center_vertical"
-            android:text="@string/imported" />
+            android:text="@string/imported"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_right"
+            android:visibility="gone" />
 
     </FrameLayout>
 

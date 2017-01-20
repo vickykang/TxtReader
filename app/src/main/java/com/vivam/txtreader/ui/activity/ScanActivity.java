@@ -23,12 +23,14 @@ import com.vivam.txtreader.data.DataManager;
 import com.vivam.txtreader.data.EventBus;
 import com.vivam.txtreader.data.event.ScanEvent;
 import com.vivam.txtreader.data.model.BookFile;
+import com.vivam.txtreader.data.model.StorageInfo;
 import com.vivam.txtreader.thread.ScanFileThread;
 import com.vivam.txtreader.ui.adapter.BookScannerAdapter;
 import com.vivam.txtreader.ui.widget.RecyclerViewHelper;
 import com.vivam.txtreader.utils.FileUtils;
 
 import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -114,7 +116,7 @@ public class ScanActivity extends AppCompatActivity
 
         mDataManager = DataManager.getInstance(this);
         mRefreshHandler = new Handler(mCallback);
-        mStorageInfos = listAvailableStorage(this);
+        mStorageInfos = FileUtils.listAvailableStorage(this);
     }
 
     @Override
@@ -228,75 +230,8 @@ public class ScanActivity extends AppCompatActivity
         mImportButton.setVisibility(visibility);
     }
 
-    public List<StorageInfo> listAvailableStorage(Context context) {
-        ArrayList<StorageInfo> storages = new ArrayList<>();
-        StorageManager storageManager = (StorageManager) context.getSystemService(
-                Context.STORAGE_SERVICE);
-        try {
-            Class<?>[] paramClasses = {};
-            Method getVolumeList = StorageManager.class.getMethod("getVolumeList", paramClasses);
-            getVolumeList.setAccessible(true);
-            Object[] params = {};
-            Object[] invokes = (Object[]) getVolumeList.invoke(storageManager, params);
-            if (invokes != null) {
-                StorageInfo info = null;
-                int len = invokes.length;
-                for (int i = 0; i < len; i++) {
-                    Object obj = invokes[i];
-                    Method getPath = obj.getClass().getMethod("getPath", new Class[0]);
-                    String path = (String) getPath.invoke(obj, new Object[0]);
-                    info = new StorageInfo(path);
-                    File file = new File(info.path);
-                    if ((file.exists()) && (file.isDirectory())
-                            && (file.canWrite() || file.canRead())) {
-                        Method isRemovable = obj.getClass().getMethod("isRemovable", new Class[0]);
-                        String state = null;
-                        try {
-                            Method getVolumeState = StorageManager.class
-                                    .getMethod("getVolumeState", String.class);
-                            state = (String) getVolumeState.invoke(storageManager, info.path);
-                            info.state = state;
-                        } catch (Exception e) {
-                            Log.e(TAG, Log.getStackTraceString(e));
-                        }
-
-                        if (info.isMounted()) {
-                            info.isRemovable = ((Boolean) isRemovable.invoke(obj, new Objects[0]))
-                                    .booleanValue();
-                            storages.add(info);
-                        }
-                    }
-                }
-            }
-        } catch (NoSuchMethodException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
-        } catch (InvocationTargetException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
-        } catch (IllegalAccessException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
-        }
-
-        return storages;
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    public class StorageInfo {
-        public static final String STATE_MOUNTED = "mounted";
-
-        public String path;
-        public String state;
-        public boolean isRemovable;
-
-        public StorageInfo(String path) {
-            this.path = path;
-        }
-
-        public boolean isMounted() {
-            return STATE_MOUNTED.equals(state);
-        }
     }
 }

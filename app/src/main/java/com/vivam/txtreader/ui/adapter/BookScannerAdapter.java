@@ -51,10 +51,10 @@ public class BookScannerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if (viewType == TYPE_FILE) {
-            return new FileHolder(inflater.inflate(R.layout.item_scan_book, parent, false));
+            return new FileHolder(inflater.inflate(R.layout.item_file, parent, false));
         }
         if (viewType == TYPE_DIR) {
-            return new DirHolder(inflater.inflate(R.layout.item_scan_dir, parent, false));
+            return new DirHolder(inflater.inflate(R.layout.item_dir, parent, false));
         }
         return null;
     }
