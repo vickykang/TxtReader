@@ -1,6 +1,8 @@
 package com.vivam.txtreader.utils;
 
+import android.content.Context;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.mozilla.universalchardet.UniversalDetector;
@@ -26,9 +28,6 @@ public class FileUtils {
     public static final File EXTERNAL_DIR = Environment.getExternalStorageDirectory();
     public static final String EXTERNAL_PATH = EXTERNAL_DIR.getPath();
     public static final String TXT_SUFFIX = ".txt";
-
-    /** The minimum size of book file */
-    public static final int MIN_FILE_SIZE = 10 * ONE_KB;
 
     public static String getName(String path) {
         String name = path;
@@ -56,6 +55,14 @@ public class FileUtils {
             return name.substring(0, index);
         }
         return name;
+    }
+
+    public static int getDepth(String path) {
+        if (TextUtils.isEmpty(path)) {
+            return 0;
+        }
+        String[] arr = path.split("/");
+        return arr.length;
     }
 
     /**

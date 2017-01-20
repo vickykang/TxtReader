@@ -1,15 +1,18 @@
 package com.vivam.txtreader.ui.activity;
 
 import android.animation.LayoutTransition;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.storage.StorageManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -25,14 +28,22 @@ import com.vivam.txtreader.ui.adapter.BookScannerAdapter;
 import com.vivam.txtreader.ui.widget.RecyclerViewHelper;
 import com.vivam.txtreader.utils.FileUtils;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ScanActivity extends AppCompatActivity
         implements View.OnClickListener,
         RecyclerViewHelper.OnItemClickListener {
+
+    private static final String TAG = "ScanActivity";
 
     private static final int STATE_EMPTY = -1;
     private static final int STATE_LOADING = 0;
@@ -58,6 +69,8 @@ public class ScanActivity extends AppCompatActivity
 
     private DataManager mDataManager;
 
+    private List<StorageInfo> mStorageInfos;
+
     private Handler mRefreshHandler;
     private final Handler.Callback mCallback = new Handler.Callback() {
         @Override
@@ -70,7 +83,7 @@ public class ScanActivity extends AppCompatActivity
         }
     };
 
-    private ScanFileThread mScanThread;
+    private ExecutorService mScanExecutor = Executors.newCachedThreadPool();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,16 +114,22 @@ public class ScanActivity extends AppCompatActivity
 
         mDataManager = DataManager.getInstance(this);
         mRefreshHandler = new Handler(mCallback);
-        mScanThread = new ScanFileThread(mDataManager, FileUtils.EXTERNAL_DIR,
-                FileUtils.TXT_SUFFIX, mRefreshHandler);
+        mStorageInfos = listAvailableStorage(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         EventBus.register(this);
+        startScan();
         notifyState(STATE_LOADING);
-        mScanThread.start();
+    }
+
+    private void startScan() {
+        for (StorageInfo info : mStorageInfos) {
+            mScanExecutor.execute(new ScanFileThread(mDataManager, info.path,
+                    FileUtils.TXT_SUFFIX, mRefreshHandler));
+        }
     }
 
     @Subscribe
@@ -209,8 +228,75 @@ public class ScanActivity extends AppCompatActivity
         mImportButton.setVisibility(visibility);
     }
 
+    public List<StorageInfo> listAvailableStorage(Context context) {
+        ArrayList<StorageInfo> storages = new ArrayList<>();
+        StorageManager storageManager = (StorageManager) context.getSystemService(
+                Context.STORAGE_SERVICE);
+        try {
+            Class<?>[] paramClasses = {};
+            Method getVolumeList = StorageManager.class.getMethod("getVolumeList", paramClasses);
+            getVolumeList.setAccessible(true);
+            Object[] params = {};
+            Object[] invokes = (Object[]) getVolumeList.invoke(storageManager, params);
+            if (invokes != null) {
+                StorageInfo info = null;
+                int len = invokes.length;
+                for (int i = 0; i < len; i++) {
+                    Object obj = invokes[i];
+                    Method getPath = obj.getClass().getMethod("getPath", new Class[0]);
+                    String path = (String) getPath.invoke(obj, new Object[0]);
+                    info = new StorageInfo(path);
+                    File file = new File(info.path);
+                    if ((file.exists()) && (file.isDirectory())
+                            && (file.canWrite() || file.canRead())) {
+                        Method isRemovable = obj.getClass().getMethod("isRemovable", new Class[0]);
+                        String state = null;
+                        try {
+                            Method getVolumeState = StorageManager.class
+                                    .getMethod("getVolumeState", String.class);
+                            state = (String) getVolumeState.invoke(storageManager, info.path);
+                            info.state = state;
+                        } catch (Exception e) {
+                            Log.e(TAG, Log.getStackTraceString(e));
+                        }
+
+                        if (info.isMounted()) {
+                            info.isRemovable = ((Boolean) isRemovable.invoke(obj, new Objects[0]))
+                                    .booleanValue();
+                            storages.add(info);
+                        }
+                    }
+                }
+            }
+        } catch (NoSuchMethodException e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } catch (InvocationTargetException e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } catch (IllegalAccessException e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        }
+
+        return storages;
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public class StorageInfo {
+        public static final String STATE_MOUNTED = "mounted";
+
+        public String path;
+        public String state;
+        public boolean isRemovable;
+
+        public StorageInfo(String path) {
+            this.path = path;
+        }
+
+        public boolean isMounted() {
+            return STATE_MOUNTED.equals(state);
+        }
     }
 }

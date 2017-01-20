@@ -5,13 +5,12 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.vivam.txtreader.data.DataManager;
-import com.vivam.txtreader.data.EventBus;
-import com.vivam.txtreader.data.event.ScanEvent;
 import com.vivam.txtreader.data.model.BookFile;
 import com.vivam.txtreader.ui.activity.ScanActivity;
 import com.vivam.txtreader.utils.FileUtils;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,15 +18,20 @@ public class ScanFileThread extends Thread {
 
     private static final String TAG = "ScanFileThread";
 
+    /** The minimum size of book file */
+    public static final int MIN_FILE_SIZE = 20 * FileUtils.ONE_KB;
+
+    public static final int MAX_FILE_DEPTH = 9;
+
     private DataManager mManager;
-    private File mDir;
+    private String mPath;
     final private String mSuffix;
     final HashMap<String, ArrayList<BookFile>> mBookFiles = new HashMap<>();
     private Handler mHandler;
 
-    public ScanFileThread(DataManager manager, File dir, String suffix, Handler handler) {
+    public ScanFileThread(DataManager manager, String path, String suffix, Handler handler) {
         mManager = manager;
-        mDir = dir;
+        mPath = path;
         mSuffix = suffix;
         mHandler = handler;
     }
@@ -36,30 +40,38 @@ public class ScanFileThread extends Thread {
     public void run() {
         super.run();
         long startTime = SystemClock.currentThreadTimeMillis();
-        scan(mDir);
+        scan(mPath);
         Log.i(TAG, "end scanning, cost " +
                 (SystemClock.currentThreadTimeMillis() - startTime) + " ms");
         mHandler.obtainMessage(ScanActivity.MSG_END_SCANNING, mBookFiles).sendToTarget();
     }
 
-    private void scan(File dir) {
-        if (!dir.exists()) {
+    private void scan(String path) {
+        File parent = new File(path);
+        if (!parent.exists()) {
             return;
         }
 
-        File[] files = dir.listFiles();
-        if (files == null) {
+        File[] files = parent.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return !file.isHidden() && file.canRead()
+                        && FileUtils.getDepth(file.getAbsolutePath()) < MAX_FILE_DEPTH;
+            }
+        });
+
+        if (files == null || files.length == 0) {
             return;
         }
 
         String name;
         for (File file : files) {
             if (file.isDirectory()) {
-                scan(file);
+                scan(file.getAbsolutePath());
             } else {
                 name = file.getName().toLowerCase();
-                if (file.length() > FileUtils.MIN_FILE_SIZE && name.endsWith(mSuffix)
-                        && !name.contains("log")) {
+                if (file.length() > MIN_FILE_SIZE && name.endsWith(mSuffix)
+                        && !isDebugFile(file.getName())) {
                     ArrayList<BookFile> list = mBookFiles.get(file.getParent());
                     if (list == null) {
                         list = new ArrayList<>();
@@ -76,5 +88,11 @@ public class ScanFileThread extends Thread {
                 }
             }
         }
+    }
+
+    private boolean isDebugFile(String name) {
+        return name.contains("debug") || name.contains("log") || name.contains("json")
+                || name.contains("config") || name.contains("dump-networking")
+                || name.contains("crash");
     }
 }
