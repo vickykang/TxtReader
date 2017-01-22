@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vivam.txtreader.R;
@@ -29,12 +30,22 @@ public class BookScannerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         mContext = context;
     }
 
+    public void setData(List<BookFile> data) {
+        mData.clear();
+        if (data != null) {
+            mData.addAll(data);
+        }
+        notifyDataSetChanged();
+    }
+
     public void setData(Map<String, List<BookFile>> data) {
         mData.clear();
-        for (String dir : data.keySet()) {
-            mData.add(dir);
-            for (BookFile file : data.get(dir)) {
-                mData.add(file);
+        if (data != null) {
+            for (String dir : data.keySet()) {
+                mData.add(dir);
+                for (BookFile file : data.get(dir)) {
+                    mData.add(file);
+                }
             }
         }
         notifyDataSetChanged();
@@ -67,7 +78,6 @@ public class BookScannerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final BookFile file = (BookFile) data;
             final FileHolder fileHolder = (FileHolder) holder;
             fileHolder.nameTv.setText(file.getName());
-            fileHolder.sizeTv.setText(Formatter.formatFileSize(mContext, file.getSize()));
             fileHolder.divider.setVisibility(
                     (position < mData.size() - 1 && mData.get(position + 1) instanceof BookFile)
                             ? View.VISIBLE : View.GONE);
@@ -82,6 +92,15 @@ public class BookScannerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 fileHolder.checkbox.setChecked(file.isSelected());
             }
 
+            if (file.isDirectory()) {
+                fileHolder.iconIv.setImageResource(R.drawable.ic_folder_96);
+                fileHolder.sizeTv.setVisibility(View.GONE);
+            } else {
+                fileHolder.iconIv.setImageResource(R.drawable.ic_txt);
+                fileHolder.sizeTv.setVisibility(View.VISIBLE);
+                fileHolder.sizeTv.setText(Formatter.formatFileSize(mContext, file.getSize()));
+            }
+
         } else if (data instanceof String) {
             DirHolder dirHolder = (DirHolder) holder;
             dirHolder.dirTv.setText(FileUtils.getName((String) data));
@@ -93,18 +112,6 @@ public class BookScannerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
             dirHolder.itemView.setClickable(false);
         }
-    }
-
-    private String buildParentPath(String path) {
-        if (path.equals(FileUtils.EXTERNAL_PATH) || path.equals(FileUtils.EXTERNAL_PATH + "/")) {
-            return mContext.getString(R.string.disk);
-        }
-        String parent = path.substring(FileUtils.EXTERNAL_PATH.length() + 1)
-                .replace('/', '.');
-        if (parent.startsWith(".")) {
-            parent = path.substring(1);
-        }
-        return parent;
     }
 
     @Override
@@ -131,6 +138,7 @@ public class BookScannerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public static class FileHolder extends RecyclerView.ViewHolder {
 
+        ImageView iconIv;
         TextView nameTv;
         TextView sizeTv;
         CheckBox checkbox;
@@ -139,6 +147,7 @@ public class BookScannerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public FileHolder(View itemView) {
             super(itemView);
+            iconIv = (ImageView) itemView.findViewById(R.id.icon);
             nameTv = (TextView) itemView.findViewById(R.id.tv_name);
             sizeTv = (TextView) itemView.findViewById(R.id.tv_size);
             checkbox = (CheckBox) itemView.findViewById(R.id.checkbox);

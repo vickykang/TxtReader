@@ -26,6 +26,7 @@ import com.vivam.txtreader.data.model.BookFile;
 import com.vivam.txtreader.data.model.StorageInfo;
 import com.vivam.txtreader.thread.ScanFileThread;
 import com.vivam.txtreader.ui.adapter.BookScannerAdapter;
+import com.vivam.txtreader.ui.adapter.FolderAdapter;
 import com.vivam.txtreader.ui.widget.RecyclerViewHelper;
 import com.vivam.txtreader.utils.FileUtils;
 
@@ -46,6 +47,8 @@ public class ScanActivity extends AppCompatActivity
         RecyclerViewHelper.OnItemClickListener {
 
     private static final String TAG = "ScanActivity";
+
+    private static final int REQUEST_FOLDER = 1;
 
     private static final int STATE_EMPTY = -1;
     private static final int STATE_LOADING = 0;
@@ -170,6 +173,16 @@ public class ScanActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_FOLDER) {
+            if (requestCode == RESULT_OK && data != null && data.getExtras() != null) {
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        }
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         EventBus.unregister(this);
@@ -179,6 +192,7 @@ public class ScanActivity extends AppCompatActivity
     public void onClick(View v) {
         final int id = v.getId();
         if (id == R.id.btn_scan_sdcard) {
+            startActivityForResult(new Intent(this, FolderActivity.class), REQUEST_FOLDER);
 
         } else if (id == R.id.btn_import) {
             if (mSelected.size() == 0) {

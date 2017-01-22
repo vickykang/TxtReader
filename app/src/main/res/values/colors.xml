@@ -20,4 +20,6 @@
     <color name="bg_read_page">#e5e5e5</color>
 
     <color name="text_content">#2e2e2e</color>
+
+    <color name="text_disable">#b3b3b3</color>
 </resources>

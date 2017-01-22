@@ -48,8 +48,8 @@
 
         <CheckBox
             android:id="@+id/checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/check_box_with"
+            android:layout_height="@dimen/check_box_height"
             android:clickable="false"
             android:button="@drawable/ic_check_box"
             android:layout_gravity="end" />
@@ -59,13 +59,6 @@
             style="@style/Subtitle"
             android:layout_gravity="end|center_vertical"
             android:text="@string/imported"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/iv_selected"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_right"
             android:visibility="gone" />
 
     </FrameLayout>

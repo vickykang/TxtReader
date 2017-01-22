@@ -45,4 +45,6 @@
 
     <dimen name="pb_width">48dp</dimen>
 
+    <dimen name="check_box_with">24dip</dimen>
+    <dimen name="check_box_height">24dip</dimen>
 </resources>

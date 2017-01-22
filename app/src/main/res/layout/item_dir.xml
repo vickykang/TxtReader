@@ -18,7 +18,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
         android:gravity="center_vertical"
-        android:drawableStart="@drawable/ic_import_dir"
+        android:drawableStart="@drawable/ic_scan_dir"
         android:drawablePadding="@dimen/margin_small"
         android:textStyle="bold" />
 

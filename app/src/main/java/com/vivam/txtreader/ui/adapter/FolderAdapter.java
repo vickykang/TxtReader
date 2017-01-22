@@ -1,6 +1,8 @@
 package com.vivam.txtreader.ui.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vivam.txtreader.R;
+import com.vivam.txtreader.data.model.BookFile;
 
-import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by kangweodai on 20/01/17.
@@ -18,38 +21,50 @@ import java.io.File;
 
 public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.Holder> {
 
-    public File[] mFiles = null;
+    private final ArrayList<BookFile> mFiles = new ArrayList<>();
+    private Context mContext;
 
     public FolderAdapter() {
 
     }
 
-    public void setFiles(File[] files) {
-        this.mFiles = files;
+    public void setFiles(ArrayList<BookFile> files) {
+        mFiles.clear();
+        if (files != null) {
+            mFiles.addAll(files);
+        }
         notifyDataSetChanged();
     }
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new Holder(LayoutInflater.from(parent.getContext())
+        mContext = parent.getContext();
+        return new Holder(LayoutInflater.from(mContext)
                 .inflate(R.layout.item_file, parent, false));
     }
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        File file = mFiles[position];
+        BookFile file = mFiles.get(position);
         if (file == null) {
             return;
         }
 
         if (file.isDirectory()) {
-            holder.iconIv.setImageResource(R.drawable.ic_folder);
+            holder.iconIv.setImageResource(R.drawable.ic_folder_24);
+            holder.sizeTv.setVisibility(View.GONE);
+        } else {
+            holder.iconIv.setImageResource(R.drawable.ic_txt);
+            holder.sizeTv.setVisibility(View.VISIBLE);
+            holder.sizeTv.setText(Formatter.formatFileSize(mContext, file.getSize()));
         }
+        holder.nameTv.setText(file.getName());
+        holder.checkBox.setChecked(file.isSelected());
     }
 
     @Override
     public int getItemCount() {
-        return mFiles != null ? mFiles.length : 0;
+        return mFiles.size();
     }
 
     public static class Holder extends RecyclerView.ViewHolder {
@@ -58,7 +73,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.Holder> {
         TextView nameTv;
         TextView sizeTv;
         CheckBox checkBox;
-        ImageView rightIv;
 
         public Holder(View itemView) {
             super(itemView);
@@ -66,10 +80,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.Holder> {
             nameTv = (TextView) itemView.findViewById(R.id.tv_name);
             sizeTv = (TextView) itemView.findViewById(R.id.tv_size);
             checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
-            rightIv = (ImageView) itemView.findViewById(R.id.iv_selected);
-
-            checkBox.setVisibility(View.GONE);
-            rightIv.setVisibility(View.VISIBLE);
+            checkBox.setButtonDrawable(R.drawable.ic_check_box_folder);
         }
     }
 }

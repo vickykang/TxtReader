@@ -92,7 +92,7 @@ public class FileUtils {
         return encoding;
     }
 
-    public static List<StorageInfo> listAvailableStorage(Context context) {
+    public static ArrayList<StorageInfo> listAvailableStorage(Context context) {
         ArrayList<StorageInfo> storages = new ArrayList<>();
         StorageManager storageManager = (StorageManager) context.getSystemService(
                 Context.STORAGE_SERVICE);

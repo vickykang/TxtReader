@@ -30,7 +30,7 @@
         <TextView
             style="@style/Subtitle"
             android:layout_gravity="center_vertical"
-            android:drawableStart="@drawable/ic_folder"
+            android:drawableStart="@drawable/ic_folder_24"
             android:drawablePadding="@dimen/margin_normal"
             android:gravity="center_vertical"
             android:text="@string/scan_sdcard"/>
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:drawableLeft="@drawable/ic_import"
+            android:drawableLeft="@drawable/ic_import_normal"
             android:drawablePadding="@dimen/margin_small"
             android:textColor="@android:color/black"
             android:text="@string/import_book"/>

@@ -11,6 +11,7 @@ public class BookFile extends BaseModel {
     long size;
     boolean isImported;
     boolean isSelected;
+    boolean isDirectory;
 
     public String getPath() {
         return path;
@@ -50,5 +51,13 @@ public class BookFile extends BaseModel {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public boolean isDirectory() {
+        return isDirectory;
+    }
+
+    public void setDirectory(boolean directory) {
+        isDirectory = directory;
     }
 }

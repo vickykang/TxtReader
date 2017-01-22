@@ -14,8 +14,36 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
         android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginEnd="@dimen/margin_normal" />
+
+    <FrameLayout
+        android:id="@+id/btn_import"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:animateLayoutChanges="true"
+        android:visibility="visible"
+        android:clickable="false">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/tv_import"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_import"
+            android:drawablePadding="@dimen/margin_small"
+            android:textColor="@color/text_import"
+            android:text="@string/import_book"
+            android:enabled="false" />
+
+    </FrameLayout>
 
 </LinearLayout>

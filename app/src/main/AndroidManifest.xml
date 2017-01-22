@@ -24,6 +24,8 @@
 
         <activity android:name=".ui.activity.ScanActivity"
             android:label="@string/local_import" />
+
+        <activity android:name=".ui.activity.FolderActivity" />
     </application>
 
 </manifest>
