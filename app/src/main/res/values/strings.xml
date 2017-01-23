@@ -4,7 +4,8 @@
     <string name="local_import">Import book</string>
     <string name="disk">Disk</string>
     <string name="scan_sdcard">Scan SDCard</string>
-    <string name="sdcard">SDCard</string>
+    <string name="pick_file">Pick File</string>
+    <string name="sdcard">SD Card</string>
     <string name="no_book_found">No book found</string>
     <string name="import_book">Import</string>
     <string name="imported">imported</string>

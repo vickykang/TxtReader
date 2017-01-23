@@ -1,18 +1,16 @@
 package com.vivam.txtreader.ui.activity;
 
 import android.animation.LayoutTransition;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.storage.StorageManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -26,19 +24,13 @@ import com.vivam.txtreader.data.model.BookFile;
 import com.vivam.txtreader.data.model.StorageInfo;
 import com.vivam.txtreader.thread.ScanFileThread;
 import com.vivam.txtreader.ui.adapter.BookScannerAdapter;
-import com.vivam.txtreader.ui.adapter.FolderAdapter;
 import com.vivam.txtreader.ui.widget.RecyclerViewHelper;
 import com.vivam.txtreader.utils.FileUtils;
 
-import java.io.File;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -120,6 +112,7 @@ public class ScanActivity extends AppCompatActivity
         mDataManager = DataManager.getInstance(this);
         mRefreshHandler = new Handler(mCallback);
         mStorageInfos = FileUtils.listAvailableStorage(this);
+        notifyState(STATE_LOADING);
     }
 
     @Override
@@ -127,7 +120,6 @@ public class ScanActivity extends AppCompatActivity
         super.onResume();
         EventBus.register(this);
         startScan();
-        notifyState(STATE_LOADING);
     }
 
     private void startScan() {
@@ -152,12 +144,14 @@ public class ScanActivity extends AppCompatActivity
     private void notifyState(int state) {
         switch (state) {
             case STATE_LOADING:
+                mScanSdcardButton.setVisibility(View.GONE);
                 mLoadingView.setVisibility(View.VISIBLE);
                 mEmptyView.setVisibility(View.GONE);
                 mBookList.setVisibility(View.GONE);
                 break;
 
             case STATE_SUCCESS:
+                mScanSdcardButton.setVisibility(View.VISIBLE);
                 mLoadingView.setVisibility(View.GONE);
                 mEmptyView.setVisibility(View.GONE);
                 mBookList.setVisibility(View.VISIBLE);
@@ -165,6 +159,7 @@ public class ScanActivity extends AppCompatActivity
                 break;
 
             case STATE_EMPTY:
+                mScanSdcardButton.setVisibility(View.VISIBLE);
                 mLoadingView.setVisibility(View.GONE);
                 mEmptyView.setVisibility(View.VISIBLE);
                 mBookList.setVisibility(View.GONE);
@@ -175,7 +170,7 @@ public class ScanActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_FOLDER) {
-            if (requestCode == RESULT_OK && data != null && data.getExtras() != null) {
+            if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
                 setResult(RESULT_OK, data);
                 finish();
             }

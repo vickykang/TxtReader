@@ -81,6 +81,8 @@ public class BookScannerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             fileHolder.divider.setVisibility(
                     (position < mData.size() - 1 && mData.get(position + 1) instanceof BookFile)
                             ? View.VISIBLE : View.GONE);
+            fileHolder.sizeTv.setText(Formatter.formatFileSize(mContext, file.getSize()));
+
             if (file.isImported()) {
                 fileHolder.checkbox.setVisibility(View.GONE);
                 fileHolder.importedTv.setVisibility(View.VISIBLE);
@@ -90,15 +92,6 @@ public class BookScannerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 fileHolder.importedTv.setVisibility(View.GONE);
                 fileHolder.itemView.setClickable(true);
                 fileHolder.checkbox.setChecked(file.isSelected());
-            }
-
-            if (file.isDirectory()) {
-                fileHolder.iconIv.setImageResource(R.drawable.ic_folder_96);
-                fileHolder.sizeTv.setVisibility(View.GONE);
-            } else {
-                fileHolder.iconIv.setImageResource(R.drawable.ic_txt);
-                fileHolder.sizeTv.setVisibility(View.VISIBLE);
-                fileHolder.sizeTv.setText(Formatter.formatFileSize(mContext, file.getSize()));
             }
 
         } else if (data instanceof String) {
@@ -153,14 +146,6 @@ public class BookScannerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             checkbox = (CheckBox) itemView.findViewById(R.id.checkbox);
             importedTv = (TextView) itemView.findViewById(R.id.tv_imported);
             divider = itemView.findViewById(R.id.divider);
-        }
-
-        public boolean isChecked() {
-            return checkbox.isChecked();
-        }
-
-        public void setChecked(boolean checked) {
-            checkbox.setChecked(checked);
         }
     }
 }

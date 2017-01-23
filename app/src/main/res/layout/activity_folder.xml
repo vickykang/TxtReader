@@ -11,13 +11,24 @@
 
     <include layout="@layout/module_divider" />
 
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/folder_title_height"
+        android:background="@color/bg_title"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/margin_small"
+        android:paddingEnd="@dimen/margin_small"
+        android:lines="1"
+        android:ellipsize="end"
+        android:textSize="@dimen/text_small"
+        android:text="@string/sdcard" />
+
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.0"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:layout_marginEnd="@dimen/margin_normal" />
+        android:layout_weight="1.0" />
 
     <FrameLayout
         android:id="@+id/btn_import"

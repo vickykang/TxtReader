@@ -41,10 +41,12 @@
     <dimen name="ic_import_dir_height">16dp</dimen>
     <dimen name="ic_import_dir_width">3dp</dimen>
     <dimen name="divider_book_file">12dp</dimen>
-    <dimen name="ic_txt_size">42dp</dimen>
+    <dimen name="ic_txt_size">32dp</dimen>
 
     <dimen name="pb_width">48dp</dimen>
 
     <dimen name="check_box_with">24dip</dimen>
     <dimen name="check_box_height">24dip</dimen>
+
+    <dimen name="folder_title_height">32dip</dimen>
 </resources>

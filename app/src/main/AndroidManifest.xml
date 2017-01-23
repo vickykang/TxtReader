@@ -25,7 +25,8 @@
         <activity android:name=".ui.activity.ScanActivity"
             android:label="@string/local_import" />
 
-        <activity android:name=".ui.activity.FolderActivity" />
+        <activity android:name=".ui.activity.FolderActivity"
+            android:label="@string/pick_file" />
     </application>
 
 </manifest>

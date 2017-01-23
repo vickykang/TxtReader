@@ -3,14 +3,13 @@ package com.vivam.txtreader.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.vivam.txtreader.R;
 import com.vivam.txtreader.data.DataManager;
@@ -18,12 +17,15 @@ import com.vivam.txtreader.data.EventBus;
 import com.vivam.txtreader.data.event.FolderEvent;
 import com.vivam.txtreader.data.model.BookFile;
 import com.vivam.txtreader.ui.adapter.BookScannerAdapter;
+import com.vivam.txtreader.ui.adapter.FolderAdapter;
 import com.vivam.txtreader.ui.widget.RecyclerViewHelper;
 import com.vivam.txtreader.utils.FileUtils;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class FolderFragment extends Fragment
         implements RecyclerViewHelper.OnItemClickListener {
@@ -34,11 +36,11 @@ public class FolderFragment extends Fragment
     private View mEmptyView;
     private RecyclerView mList;
 
-    private BookScannerAdapter mAdapter;
+    private FolderAdapter mAdapter;
 
     private String mPath;
 
-    private final ArrayList<BookFile> mFiles = new ArrayList<>();
+    private final ArrayList<BookFile> mData = new ArrayList<>();
 
     private DataManager mDataManager;
 
@@ -74,7 +76,7 @@ public class FolderFragment extends Fragment
         mEmptyView = view.findViewById(R.id.empty_view);
         mList = (RecyclerView) view.findViewById(R.id.list);
 
-        mAdapter = new BookScannerAdapter(getActivity());
+        mAdapter = new FolderAdapter();
         mList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mList.setAdapter(mAdapter);
         RecyclerViewHelper.addTo(mList)
@@ -87,20 +89,27 @@ public class FolderFragment extends Fragment
     }
 
     private void initData() {
-        mFiles.clear();
+        ArrayList<BookFile> dirs = new ArrayList<>();
+        ArrayList<BookFile> files = new ArrayList<>();
 
         Bundle args = getArguments();
         if (args != null) {
             mPath = args.getString(ARG_PATH);
-            ArrayList<BookFile> files = (ArrayList<BookFile>) args.getSerializable(ARG_FILES);
-            if (files != null) {
-                mFiles.addAll(files);
+            ArrayList<BookFile> fileList = (ArrayList<BookFile>) args.getSerializable(ARG_FILES);
+            if (fileList != null) {
+                for (BookFile file : fileList) {
+                    if (file.isDirectory()) {
+                        dirs.add(file);
+                    } else {
+                        files.add(file);
+                    }
+                }
             }
         }
 
-        File[] files = null;
+        File[] fileList = null;
         if (!TextUtils.isEmpty(mPath)) {
-            files = new File(mPath).listFiles(new FileFilter() {
+            fileList = new File(mPath).listFiles(new FileFilter() {
                 @Override
                 public boolean accept(File file) {
                     return !file.isHidden() && file.canRead() && (file.isDirectory() ||
@@ -109,28 +118,60 @@ public class FolderFragment extends Fragment
             });
         }
 
-        if (files == null) return;
-        for (File file : files) {
+        if (fileList == null) return;
+        for (File file : fileList) {
             BookFile bookFile = new BookFile();
             bookFile.setName(file.getName());
             bookFile.setPath(file.getAbsolutePath());
             bookFile.setSelected(false);
             bookFile.setImported(mDataManager.isImported(file.getAbsolutePath()));
             bookFile.setSize(file.length());
-            bookFile.setDirectory(file.isDirectory());
-            mFiles.add(bookFile);
+            if (file.isDirectory()) {
+                bookFile.setDirectory(true);
+                dirs.add(bookFile);
+            } else {
+                bookFile.setDirectory(false);
+                files.add(bookFile);
+            }
+        }
+        sortData(dirs, files);
+    }
+
+    private void sortData(ArrayList<BookFile> dirs, ArrayList<BookFile> files) {
+        mData.clear();
+        if (dirs != null) {
+            Collections.sort(dirs, new NameComparator());
+            mData.addAll(dirs);
+        }
+        if (files != null) {
+            Collections.sort(files, new NameComparator());
+            mData.addAll(files);
         }
     }
 
     private void refreshView() {
-        if (mFiles.size() > 0) {
+        if (mData.size() > 0) {
             mEmptyView.setVisibility(View.GONE);
             mList.setVisibility(View.VISIBLE);
-            mAdapter.setData(mFiles);
+            mAdapter.setData(mData);
         } else {
             mEmptyView.setVisibility(View.VISIBLE);
             mList.setVisibility(View.GONE);
         }
+    }
+
+    private String formatPath(String path) {
+        if (!TextUtils.isEmpty(path)) {
+            if (path.startsWith("/")) {
+                path = path.substring(1);
+            }
+            if (path.endsWith("/")) {
+                path = path.substring(0, path.length() - 1);
+            }
+            path = path.replace("/", " > ");
+            return path;
+        }
+        return "Unknown directory";
     }
 
     @Override
@@ -140,11 +181,11 @@ public class FolderFragment extends Fragment
 
     @Override
     public void onItemClick(RecyclerView recyclerView, int position, View view) {
-        BookScannerAdapter adapter = (BookScannerAdapter) recyclerView.getAdapter();
+        FolderAdapter adapter = (FolderAdapter) recyclerView.getAdapter();
         if (adapter == null) {
             return;
         }
-        BookFile file = (BookFile) adapter.getItem(position);
+        BookFile file = adapter.getItem(position);
         if (file == null || file.isImported()) {
             return;
         }
@@ -155,5 +196,13 @@ public class FolderFragment extends Fragment
             adapter.notifyDataSetChanged();
         }
         EventBus.post(new FolderEvent(file));
+    }
+
+    private class NameComparator implements Comparator<BookFile> {
+
+        @Override
+        public int compare(BookFile o1, BookFile o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
     }
 }

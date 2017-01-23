@@ -26,15 +26,15 @@ import java.util.ArrayList;
 public class FolderActivity extends AppCompatActivity
         implements View.OnClickListener {
 
-    private static final String EXTRA_PARENT = "parent";
+    private static final String TITLE_SPLIT = "  >  ";
 
     private Toolbar mToolbar;
+    private TextView mTitleTextView;
     private View mImportButton;
     private TextView mImportTextView;
 
     ArrayList<StorageInfo> mStorageInfos;
 
-    private String mParent;
     private final ArrayList<BookFile> mSelectedFiles = new ArrayList<>();
 
     private DataManager mDataManager;
@@ -44,54 +44,42 @@ public class FolderActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_folder);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mTitleTextView = (TextView) findViewById(R.id.tv_title);
         mImportButton = findViewById(R.id.btn_import);
         mImportTextView = (TextView) findViewById(R.id.tv_import);
 
         setSupportActionBar(mToolbar);
+        mToolbar.setTitle(getTitle());
         mImportButton.setOnClickListener(this);
+
+        mTitleTextView.setText(getString(R.string.sdcard));
 
         mDataManager = DataManager.getInstance(this);
 
-        initData(savedInstanceState);
+        initData();
     }
 
-    private void initData(Bundle savedInstanceState) {
-
+    private void initData() {
         mStorageInfos = FileUtils.listAvailableStorage(this);
-
-        if (savedInstanceState == null) {
-            mParent = getString(R.string.sdcard);
-            if (mStorageInfos.size() == 1) {
-                startFragment(mParent, mStorageInfos.get(0).path);
-
-            } else if (mStorageInfos.size() > 1){
-                ArrayList<BookFile> files = new ArrayList<>();
-                for (StorageInfo info : mStorageInfos) {
-                    BookFile file = new BookFile();
-                    file.setName(FileUtils.getName(info.path));
-                    file.setPath(info.path);
-                    file.setDirectory(true);
-                    file.setSelected(false);
-                    files.add(file);
-                }
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.container, FolderFragment.newInstance(files));
-                ft.addToBackStack(null);
-                ft.commit();
+        if (mStorageInfos.size() == 1) {
+            startFragment(FolderFragment.newInstance(mStorageInfos.get(0).path));
+        } else if (mStorageInfos.size() > 1){
+            ArrayList<BookFile> files = new ArrayList<>();
+            for (StorageInfo info : mStorageInfos) {
+                BookFile file = new BookFile();
+                file.setName(FileUtils.getName(info.path));
+                file.setPath(info.path);
+                file.setDirectory(true);
+                file.setSelected(false);
+                files.add(file);
             }
-
-        } else {
-            mParent = savedInstanceState.getString(EXTRA_PARENT);
+            startFragment(FolderFragment.newInstance(files));
         }
-        mToolbar.setTitle(mParent);
     }
 
-    private void startFragment(String parent, String path) {
-        mParent = parent;
-        mToolbar.setTitle(mParent);
+    private void startFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, FolderFragment.newInstance(path))
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.replace(R.id.container, fragment);
         ft.addToBackStack(null);
         ft.commit();
     }
@@ -110,7 +98,8 @@ public class FolderActivity extends AppCompatActivity
             return;
         }
         if (file.isDirectory()) {
-            startFragment(file.getName(), file.getPath());
+            mTitleTextView.setText(mTitleTextView.getText() + TITLE_SPLIT + file.getName());
+            startFragment(FolderFragment.newInstance(file.getPath()));
         } else {
             if (file.isSelected()) {
                 mSelectedFiles.add(file);
@@ -147,5 +136,22 @@ public class FolderActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         EventBus.unregister(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        FragmentManager fm = getSupportFragmentManager();
+        int count = fm.getBackStackEntryCount();
+        if (count > 0) {
+            String title = mTitleTextView.getText().toString();
+            int index = title.lastIndexOf(TITLE_SPLIT);
+            if (index > -1 && index < title.length()) {
+                title = title.substring(0, index);
+            }
+            mTitleTextView.setText(title);
+        } else {
+            finish();
+        }
     }
 }

@@ -16,19 +16,19 @@ import com.vivam.txtreader.data.model.BookFile;
 import java.util.ArrayList;
 
 /**
- * Created by kangweodai on 20/01/17.
+ * Created by kangweodai on 23/01/17.
  */
 
 public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.Holder> {
 
-    private final ArrayList<BookFile> mFiles = new ArrayList<>();
     private Context mContext;
+    public final ArrayList<BookFile> mFiles = new ArrayList<>();
 
     public FolderAdapter() {
 
     }
 
-    public void setFiles(ArrayList<BookFile> files) {
+    public void setData(ArrayList<BookFile> files) {
         mFiles.clear();
         if (files != null) {
             mFiles.addAll(files);
@@ -46,20 +46,27 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.Holder> {
     @Override
     public void onBindViewHolder(Holder holder, int position) {
         BookFile file = mFiles.get(position);
-        if (file == null) {
-            return;
-        }
-
+        holder.nameTv.setText(file.getName());
         if (file.isDirectory()) {
-            holder.iconIv.setImageResource(R.drawable.ic_folder_24);
+            holder.iconIv.setImageResource(R.drawable.ic_folder);
             holder.sizeTv.setVisibility(View.GONE);
+            holder.checkbox.setVisibility(View.GONE);
+            holder.importedTv.setVisibility(View.GONE);
         } else {
             holder.iconIv.setImageResource(R.drawable.ic_txt);
             holder.sizeTv.setVisibility(View.VISIBLE);
             holder.sizeTv.setText(Formatter.formatFileSize(mContext, file.getSize()));
+            if (file.isImported()) {
+                holder.importedTv.setVisibility(View.VISIBLE);
+                holder.checkbox.setVisibility(View.GONE);
+                holder.itemView.setClickable(false);
+            } else {
+                holder.importedTv.setVisibility(View.GONE);
+                holder.checkbox.setVisibility(View.VISIBLE);
+                holder.checkbox.setChecked(file.isSelected());
+                holder.itemView.setClickable(true);
+            }
         }
-        holder.nameTv.setText(file.getName());
-        holder.checkBox.setChecked(file.isSelected());
     }
 
     @Override
@@ -67,20 +74,26 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.Holder> {
         return mFiles.size();
     }
 
+    public BookFile getItem(int position) {
+        return mFiles.get(position);
+    }
+
     public static class Holder extends RecyclerView.ViewHolder {
 
-        ImageView iconIv;
-        TextView nameTv;
-        TextView sizeTv;
-        CheckBox checkBox;
+        private ImageView iconIv;
+        private TextView nameTv;
+        private TextView sizeTv;
+        private CheckBox checkbox;
+        private TextView importedTv;
 
         public Holder(View itemView) {
             super(itemView);
             iconIv = (ImageView) itemView.findViewById(R.id.icon);
             nameTv = (TextView) itemView.findViewById(R.id.tv_name);
             sizeTv = (TextView) itemView.findViewById(R.id.tv_size);
-            checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
-            checkBox.setButtonDrawable(R.drawable.ic_check_box_folder);
+            importedTv = (TextView) itemView.findViewById(R.id.tv_imported);
+            checkbox = (CheckBox) itemView.findViewById(R.id.checkbox);
+            checkbox.setButtonDrawable(R.drawable.ic_check_box_sdcard);
         }
     }
 }
