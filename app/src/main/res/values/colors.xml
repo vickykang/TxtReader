@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#7ba1a8</color>
     <color name="colorPrimaryDark">#5d828a</color>
-    <color name="colorAccent">#eacdd1</color>
+    <color name="colorAccent">#c35655</color>
 
     <color name="divider">#e2e2e2</color>
 
@@ -24,4 +24,6 @@
     <color name="text_disable">#b3b3b3</color>
 
     <color name="bg_title">#f2f2f2</color>
+
+    <color name="bg_list_item_clicked">#f5f5f5</color>
 </resources>

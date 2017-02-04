@@ -1,18 +1,26 @@
 package com.vivam.txtreader.ui.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.vivam.txtreader.R;
 import com.vivam.txtreader.data.DataManager;
 import com.vivam.txtreader.data.model.Book;
 import com.vivam.txtreader.ui.adapter.BookshelfAdapter;
+import com.vivam.txtreader.ui.widget.ItemDialog;
 import com.vivam.txtreader.ui.widget.RecyclerViewHelper;
 import com.vivam.txtreader.ui.widget.SpacesItemDecoration;
 
@@ -38,6 +46,8 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<Book> mBooks = new ArrayList<>();
 
     private DataManager mDataManager;
+
+    private ItemDialog mRemoveDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +95,7 @@ public class MainActivity extends AppCompatActivity
                 boolean isImported = data.getBooleanExtra(ScanActivity.EXTRA_IMPORTED, false);
                 if (isImported) {
                     refreshData();
-                    notifyState();
+                    syncView();
                 }
             }
         }
@@ -94,10 +104,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        notifyState();
+        syncView();
     }
 
-    private void notifyState() {
+    private void syncView() {
         if (mBooks.size() > 0) {
             mEmptyView.setVisibility(View.GONE);
             mBookshelf.setVisibility(View.VISIBLE);
@@ -127,12 +137,61 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onItemLongClick(RecyclerView recyclerView, int position, View view) {
+        if (mBooks == null || position > mBooks.size() - 1) {
+            return;
+        }
 
+        CharSequence[] texts = getResources().getStringArray(R.array.delete_book_items);
+        if (texts == null) {
+            return;
+        }
+        ColorStateList[] colors = new ColorStateList[texts.length];
+        colors[0] = ContextCompat.getColorStateList(this, R.color.colorAccent);
+        colors[1] = colors[0];
+        colors[2] = ColorStateList.valueOf(Color.BLACK);
+
+        final Book book = mBooks.get(position);
+
+        if (mRemoveDialog == null) {
+            mRemoveDialog = new ItemDialog.Builder(this, R.style.BottomDialog)
+                    .setItems(texts)
+                    .setColors(colors)
+                    .setOnClickListener(new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0:
+                                    mDataManager.removeBookFromShelf(book);
+                                    mBooks.remove(book);
+                                    syncView();
+                                    break;
+                                case 1:
+                                    mDataManager.removeBookCompletely(book);
+                                    mBooks.remove(book);
+                                    syncView();
+                                    break;
+                            }
+                            dialog.dismiss();
+                        }
+                    })
+                    .create();
+        }
+
+        Window window = mRemoveDialog.getWindow();
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.gravity = Gravity.BOTTOM;
+        window.setAttributes(lp);
+
+        mRemoveDialog.show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mRemoveDialog != null && mRemoveDialog.isShowing()) {
+            mRemoveDialog.dismiss();
+        }
         mDataManager.clearCache();
     }
 }

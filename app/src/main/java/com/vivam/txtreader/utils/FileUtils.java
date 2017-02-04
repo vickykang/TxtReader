@@ -142,4 +142,15 @@ public class FileUtils {
 
         return storages;
     }
+
+    public static boolean deleteFile(String path) {
+        return deleteFile(new File(path));
+    }
+
+    public static boolean deleteFile(File file) {
+        if (file != null && file.exists()) {
+            return file.delete();
+        }
+        return true;
+    }
 }

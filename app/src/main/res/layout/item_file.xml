@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/margin_normal"
     android:paddingRight="@dimen/margin_normal"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/bg_list_item">
 
     <ImageView
         android:id="@id/icon"
