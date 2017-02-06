@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
  * Created by kangweodai on 17/01/17.
  */
 
-public class Contents {
+public class Constants {
 
     /**
      * 获取文本章节名称的正则表达式
@@ -28,4 +28,9 @@ public class Contents {
     public static Pattern getChapterPattern() {
         return Pattern.compile(REX_CHAPTER);
     }
+
+    public static final int STATE_FAILED = -1;
+    public static final int STATE_LOADING = 0;
+    public static final int STATE_EMPTY = 1;
+    public static final int STATE_SUCCESS = 2;
 }

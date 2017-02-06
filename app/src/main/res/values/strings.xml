@@ -32,4 +32,7 @@
     <string name="loading_scan">Scanning...</string>
 
     <string name="empty_folder">No files</string>
+
+    <string name="loading_open">Opening...</string>
+    <string name="open_failed">Open failed</string>
 </resources>

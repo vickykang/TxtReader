@@ -1,13 +1,13 @@
 package com.vivam.txtreader.data.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Book extends BookFile {
 
     String charset;
     long createTime;
     long updateTime;
-    ArrayList<Chapter> chapters;
+    List<Chapter> chapters;
 
     public Book() {
     }
@@ -47,11 +47,11 @@ public class Book extends BookFile {
         this.updateTime = updateTime;
     }
 
-    public ArrayList<Chapter> getChapters() {
+    public List<Chapter> getChapters() {
         return chapters;
     }
 
-    public void setChapters(ArrayList<Chapter> chapters) {
+    public void setChapters(List<Chapter> chapters) {
         this.chapters = chapters;
     }
 }

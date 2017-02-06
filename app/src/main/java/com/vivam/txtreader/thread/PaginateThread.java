@@ -49,7 +49,9 @@ public class PaginateThread extends Thread {
 
         long startTime = SystemClock.currentThreadTimeMillis();
 
-        if (mChapters == null) {
+        if (mChapters == null || mChapters.size() == 0) {
+            Log.w(TAG, "chapter not found");
+            mHandler.obtainMessage(PaginateWork.MSG_PAGINATED_ONE, null).sendToTarget();
             return;
         }
 

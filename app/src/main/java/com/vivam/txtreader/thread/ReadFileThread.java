@@ -5,7 +5,7 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.vivam.txtreader.Contents;
+import com.vivam.txtreader.Constants;
 import com.vivam.txtreader.data.model.Book;
 import com.vivam.txtreader.data.model.Chapter;
 import com.vivam.txtreader.utils.FileUtils;
@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +28,7 @@ public class ReadFileThread extends Thread {
     private static final String TAG = "ReadFileThread";
 
     Book mBook;
-    ArrayList<Chapter> mChapters;
+    List<Chapter> mChapters;
     Handler mHandler;
 
     public ReadFileThread(Book book, Handler handler) {
@@ -75,10 +76,11 @@ public class ReadFileThread extends Thread {
         String content = new String(bytes, mBook.getCharset());
 
         if (TextUtils.isEmpty(content)) {
+            Log.w(TAG, mBook.getName() + " has no content.");
             return;
         }
 
-        Pattern pattern = Contents.getChapterPattern();
+        Pattern pattern = Constants.getChapterPattern();
         Matcher matcher = pattern.matcher(content);
 
         int index = 0;

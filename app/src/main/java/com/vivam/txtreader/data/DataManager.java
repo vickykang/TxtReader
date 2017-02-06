@@ -11,9 +11,13 @@ import android.os.SystemClock;
 
 import com.vivam.txtreader.data.model.Book;
 import com.vivam.txtreader.data.model.BookFile;
+import com.vivam.txtreader.data.model.Chapter;
 import com.vivam.txtreader.utils.FileUtils;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DataManager {
@@ -137,10 +141,61 @@ public class DataManager {
         book.setId(cursor.getLong(cursor.getColumnIndexOrThrow(Columns._ID)));
         book.setName(cursor.getString(cursor.getColumnIndexOrThrow(Columns.COLUMN_NAME)));
         book.setPath(cursor.getString(cursor.getColumnIndexOrThrow(Columns.COLUMN_PATH)));
+        book.setSize(cursor.getLong(cursor.getColumnIndexOrThrow(Columns.COLUMN_SIZE)));
         book.setCharset(cursor.getString(cursor.getColumnIndexOrThrow(Columns.COLUMN_CHARSET)));
         book.setCreateTime(cursor.getLong(cursor.getColumnIndexOrThrow(Columns.COLUMN_CREATED)));
         book.setUpdateTime(cursor.getLong(cursor.getColumnIndexOrThrow(Columns.COLUMN_UPDATED)));
         book.setImported(true);
         return book;
+    }
+
+    public void insertChapters(Book book, List<Chapter> chapters) {
+        if (book != null && chapters != null) {
+            for (Chapter c : chapters) {
+                insertChapter(book.getId(), c);
+            }
+            book.setChapters(chapters);
+            mBookCache.put(book.getPath(), book);
+        }
+    }
+
+    public void insertChapter(long bookId, Chapter chapter) {
+        if (chapter == null) {
+            return;
+        }
+        ContentValues values = new ContentValues();
+        values.put(Columns.COLUMN_BOOK_ID, bookId);
+        values.put(Columns.COLUMN_CHAPTER_INDEX, chapter.getIndex());
+        values.put(Columns.COLUMN_CHAPTER_START, chapter.getStart());
+        values.put(Columns.COLUMN_CHAPTER_END, chapter.getEnd());
+        mResolver.insert(ReaderProvider.CONTENT_URI_BOOK, values);
+    }
+
+    public void updateTime(Book book) {
+        if (book == null) {
+            return;
+        }
+        long time = SystemClock.currentThreadTimeMillis();
+        book.setUpdateTime(time);
+        mBookCache.put(book.getPath(), book);
+
+        ContentValues values = new ContentValues();
+        values.put(Columns.COLUMN_UPDATED, time);
+        mResolver.update(ReaderProvider.CONTENT_URI_BOOK, values, Columns._ID + " = ?",
+                new String[]{String.valueOf(book.getId())});
+    }
+
+    public void sortBooks(List<Book> books) {
+        if (books == null || books.size() < 2) {
+            return;
+        }
+
+        Collections.sort(books, new Comparator<Book>() {
+            @Override
+            public int compare(Book o1, Book o2) {
+                return o1.getUpdateTime() == o2.getUpdateTime() ? 0 :
+                        (o1.getUpdateTime() < o2.getUpdateTime() ? 1 : -1);
+            }
+        });
     }
 }

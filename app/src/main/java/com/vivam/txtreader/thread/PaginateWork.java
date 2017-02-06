@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.vivam.txtreader.data.EventBus;
 import com.vivam.txtreader.data.event.ChapterEvent;
+import com.vivam.txtreader.data.event.ChapterMatchedEvent;
 import com.vivam.txtreader.data.model.Book;
 import com.vivam.txtreader.data.model.Chapter;
 
@@ -20,7 +21,6 @@ public class PaginateWork {
     public static final int MSG_PAGINATED_ONE = 2;
 
     private Book mBook;
-    private ArrayList<Chapter> mChapters;
     private final TextPaint mPaint;
     private final int mWidth;
     private final int mHeight;
@@ -65,6 +65,7 @@ public class PaginateWork {
                 mPaginateThread = new PaginateThread(chapters, mPaint, mWidth, mHeight,
                         mSpacingMulti, mSpacingExtra, mIncludeFontPadding, mHandler);
                 mPaginateThread.start();
+                EventBus.post(new ChapterMatchedEvent(chapters));
                 return true;
 
             } else if (msg.what == MSG_PAGINATED_ONE) {

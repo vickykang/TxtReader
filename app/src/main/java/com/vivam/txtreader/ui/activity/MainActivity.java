@@ -2,8 +2,10 @@ package com.vivam.txtreader.ui.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -15,6 +17,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.vivam.txtreader.R;
 import com.vivam.txtreader.data.DataManager;
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity
     private void refreshData() {
         mBooks.clear();
         mBooks.addAll(mDataManager.getAllBooks().values());
+        mDataManager.sortBooks(mBooks);
     }
 
     @Override
@@ -122,7 +126,10 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View v) {
         final int id = v.getId();
         if (id == R.id.fab_add) {
-            startActivityForResult(new Intent(this, ScanActivity.class), REQUEST_IMPORT);
+            //startActivityForResult(new Intent(this, ScanActivity.class), REQUEST_IMPORT);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("http://www.meizu.com"));
+            startActivity(intent);
         }
     }
 
@@ -175,13 +182,13 @@ public class MainActivity extends AppCompatActivity
                         }
                     })
                     .create();
-        }
 
-        Window window = mRemoveDialog.getWindow();
-        WindowManager.LayoutParams lp = window.getAttributes();
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.gravity = Gravity.BOTTOM;
-        window.setAttributes(lp);
+            Window window = mRemoveDialog.getWindow();
+            WindowManager.LayoutParams lp = window.getAttributes();
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.gravity = Gravity.BOTTOM;
+            window.setAttributes(lp);
+        }
 
         mRemoveDialog.show();
     }

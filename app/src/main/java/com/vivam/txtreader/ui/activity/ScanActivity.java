@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
+import com.vivam.txtreader.Constants;
 import com.vivam.txtreader.R;
 import com.vivam.txtreader.data.DataManager;
 import com.vivam.txtreader.data.EventBus;
@@ -41,10 +42,6 @@ public class ScanActivity extends AppCompatActivity
     private static final String TAG = "ScanActivity";
 
     private static final int REQUEST_FOLDER = 1;
-
-    private static final int STATE_EMPTY = -1;
-    private static final int STATE_LOADING = 0;
-    private static final int STATE_SUCCESS = 1;
 
     public static final String EXTRA_IMPORTED = "imported";
 
@@ -112,7 +109,7 @@ public class ScanActivity extends AppCompatActivity
         mDataManager = DataManager.getInstance(this);
         mRefreshHandler = new Handler(mCallback);
         mStorageInfos = FileUtils.listAvailableStorage(this);
-        notifyState(STATE_LOADING);
+        notifyState(Constants.STATE_LOADING);
     }
 
     @Override
@@ -134,23 +131,23 @@ public class ScanActivity extends AppCompatActivity
         mFiles.clear();
         HashMap<String, ArrayList<BookFile>> data = event.getBookFiles();
         if (data == null || data.size() == 0) {
-            notifyState(STATE_EMPTY);
+            notifyState(Constants.STATE_EMPTY);
         } else {
             mFiles.putAll(data);
-            notifyState(STATE_SUCCESS);
+            notifyState(Constants.STATE_SUCCESS);
         }
     }
 
     private void notifyState(int state) {
         switch (state) {
-            case STATE_LOADING:
+            case Constants.STATE_LOADING:
                 mScanSdcardButton.setVisibility(View.GONE);
                 mLoadingView.setVisibility(View.VISIBLE);
                 mEmptyView.setVisibility(View.GONE);
                 mBookList.setVisibility(View.GONE);
                 break;
 
-            case STATE_SUCCESS:
+            case Constants.STATE_SUCCESS:
                 mScanSdcardButton.setVisibility(View.VISIBLE);
                 mLoadingView.setVisibility(View.GONE);
                 mEmptyView.setVisibility(View.GONE);
@@ -158,7 +155,7 @@ public class ScanActivity extends AppCompatActivity
                 mAdapter.setData(mFiles);
                 break;
 
-            case STATE_EMPTY:
+            case Constants.STATE_EMPTY:
                 mScanSdcardButton.setVisibility(View.VISIBLE);
                 mLoadingView.setVisibility(View.GONE);
                 mEmptyView.setVisibility(View.VISIBLE);
