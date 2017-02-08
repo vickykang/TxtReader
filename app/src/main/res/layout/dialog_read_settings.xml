@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/margin_big"
+    android:paddingTop="36dp"
+    android:paddingRight="@dimen/margin_big"
+    android:paddingBottom="36dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+
+    <SeekBar
+        android:id="@+id/seek_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp">
+
+        <ImageView
+            android:id="@+id/btn_chapter"
+            android:layout_width="@dimen/read_settings_ic_size"
+            android:layout_height="@dimen/read_settings_ic_size"
+            android:gravity="center"
+            android:src="@drawable/ic_chapter" />
+
+        <ImageView
+            android:id="@+id/btn_text_format"
+            android:layout_width="@dimen/read_settings_ic_size"
+            android:layout_height="@dimen/read_settings_ic_size"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:src="@drawable/ic_text_format" />
+
+        <ImageView
+            android:id="@+id/btn_background"
+            android:layout_width="@dimen/read_settings_ic_size"
+            android:layout_height="@dimen/read_settings_ic_size"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:src="@drawable/ic_background_default" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/container_text_format"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_big"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_normal"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_normal"
+            android:text="A" />
+
+        <SeekBar
+            android:id="@+id/seek_bar_font"
+            android:layout_width="@dimen/read_font_seek_bar_width"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_large"
+            android:text="A" />
+
+    </LinearLayout>
+
+</LinearLayout>

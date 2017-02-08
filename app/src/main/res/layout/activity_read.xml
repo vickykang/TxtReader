@@ -2,7 +2,8 @@
 <com.vivam.txtreader.ui.widget.PartitionView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/partition">
+    android:id="@+id/partition"
+    android:background="@color/bg_read_default">
 
     <include layout="@layout/module_content_view"
         android:visibility="invisible" />

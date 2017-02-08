@@ -28,6 +28,9 @@
         <activity android:name=".ui.activity.FolderActivity"
             android:label="@string/pick_file" />
 
+        <activity android:name=".ui.activity.ChapterActivity"
+            android:theme="@style/ChapterActivityStyle" />
+
         <provider
             android:authorities="com.vivam.txtreader"
             android:name=".data.ReaderProvider" />

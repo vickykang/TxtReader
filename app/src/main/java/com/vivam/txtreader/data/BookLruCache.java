@@ -13,7 +13,7 @@ import java.io.ObjectOutputStream;
  * Created by kangweodai on 19/01/17.
  */
 
-public class BookLruCache extends LruCache<String, Book> {
+public class BookLruCache extends LruCache<Long, Book> {
 
     private static final String TAG = "BookLruCache";
 
@@ -27,7 +27,7 @@ public class BookLruCache extends LruCache<String, Book> {
     }
 
     @Override
-    protected int sizeOf(String key, Book value) {
+    protected int sizeOf(Long key, Book value) {
         int size;
         try {
             size = getObjectSize(value);

@@ -35,4 +35,6 @@
 
     <string name="loading_open">Opening...</string>
     <string name="open_failed">Open failed</string>
+
+    <string name="empty_chapter">No chapter</string>
 </resources>

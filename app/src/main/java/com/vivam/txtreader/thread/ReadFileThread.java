@@ -154,7 +154,7 @@ public class ReadFileThread extends Thread {
     private Chapter newChapter(String name, int start) {
         Chapter chapter = new Chapter();
         chapter.setBookId(mBook.getId());
-        chapter.setName(name);
+        chapter.setName(name != null ? name.trim() : null);
         chapter.setStart(start);
         chapter.setIndex(mChapters.size());
         return chapter;

@@ -3,6 +3,8 @@ package com.vivam.txtreader.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -22,6 +24,7 @@ import com.vivam.txtreader.data.model.Book;
 import com.vivam.txtreader.data.model.Chapter;
 import com.vivam.txtreader.thread.PaginateWork;
 import com.vivam.txtreader.ui.adapter.PageAdapter;
+import com.vivam.txtreader.ui.fragment.ReadSettingsDialogFragment;
 import com.vivam.txtreader.ui.widget.PartitionView;
 
 import java.util.ArrayList;
@@ -33,6 +36,8 @@ public class ReadActivity extends AppCompatActivity
     private static final String TAG = "ReadActivity";
 
     public static final String EXTRA_BOOK = "book";
+
+    public static final int REQUEST_CHAPTER_LIST = 0x2;
 
     private ViewPager mPager;
     private TextView mFakeTextView;
@@ -160,7 +165,15 @@ public class ReadActivity extends AppCompatActivity
                 break;
 
             case PartitionView.AREA_CENTER:
-                Toast.makeText(this, "CENTER AREA", Toast.LENGTH_SHORT).show();
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+                ReadSettingsDialogFragment fragment = ReadSettingsDialogFragment
+                        .newInstance(mBook.getId());
+                fragment.show(ft, "dialog");
                 break;
 
             case PartitionView.AREA_RIGHT:

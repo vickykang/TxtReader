@@ -120,44 +120,6 @@ public class PartitionView extends FrameLayout {
         }
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        /*if (mNeedDrawLines) {
-            Paint paint = new Paint();
-            paint.setColor(mLineColor);
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setAntiAlias(true);
-            paint.setStrokeWidth(LINE_WIDTH);
-            if (mLineType == LINE_DASHED) {
-                paint.setPathEffect(new DashPathEffect(new float[]{DASH_WIDTH, DASH_GAP}, 0));
-            }
-
-            if (hasCenterArea()) {
-                Path top = new Path();
-                top.moveTo(mLeftWidth, 0);
-                top.quadTo(mLeftWidth, mCenterStartY / 2, mLeftWidth, mCenterStartY);
-                canvas.drawPath(top, paint);
-
-                Path bottom = new Path();
-                bottom.moveTo(mLeftWidth, mCenterStartY + mCenterHeight);
-                bottom.quadTo(mLeftWidth, (mScreenHeight + mCenterStartY + mCenterHeight) / 2,
-                        mLeftWidth, mScreenHeight);
-                canvas.drawPath(bottom, paint);
-
-                canvas.drawRect(mCenterStartX, mCenterStartY, mCenterStartX + mCenterWidth,
-                        mCenterStartY + mCenterHeight, paint);
-            } else {
-                if (mLeftWidth > 0 && mLeftWidth < mScreenWidth) {
-                    Path path = new Path();
-                    path.moveTo(mLeftWidth, 0);
-                    path.quadTo(mLeftWidth, mScreenHeight / 2, mLeftWidth, mScreenHeight);
-                    canvas.drawPath(path, paint);
-                }
-            }
-        }*/
-    }
-
     private float mTouchX = -1;
     private float mTouchY = -1;
 

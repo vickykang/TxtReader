@@ -17,7 +17,7 @@
 
     <color name="text_bottom_bar">#616161</color>
 
-    <color name="bg_read_page">#e5e5e5</color>
+    <color name="bg_read_default">#f2f2f2</color>
 
     <color name="text_content">#2e2e2e</color>
 
@@ -29,4 +29,9 @@
 
     <color name="bg_partition_view">#f2f5f5dc</color>
     <color name="default_partition_line">#5e5e5e</color>
+
+    <color name="bg_progress_horizontal">#769aa9a8</color>
+
+    <color name="bg_chapter">#dbc7a6</color>
+    <color name="divider_chapter">#d5b884</color>
 </resources>

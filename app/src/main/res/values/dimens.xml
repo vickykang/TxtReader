@@ -4,7 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <!-- Font size -->
-    <dimen name="font_large">20dp</dimen>
+    <dimen name="font_large">24dp</dimen>
     <dimen name="font_normal">16dp</dimen>
     <dimen name="font_small">12dp</dimen>
     <dimen name="font_tiny">8dp</dimen>
@@ -49,4 +49,11 @@
     <dimen name="check_box_height">24dip</dimen>
 
     <dimen name="folder_title_height">32dip</dimen>
+
+    <dimen name="read_settings_min_height">180dp</dimen>
+    <dimen name="progress_horizontal_height">6dp</dimen>
+    <dimen name="progress_horizontal_radius">3dp</dimen>
+    <dimen name="read_settings_ic_size">36dp</dimen>
+    <dimen name="read_font_seek_bar_width">270dp</dimen>
+    <dimen name="read_font_seek_bar_segment">90dp</dimen>
 </resources>

@@ -126,10 +126,7 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View v) {
         final int id = v.getId();
         if (id == R.id.fab_add) {
-            //startActivityForResult(new Intent(this, ScanActivity.class), REQUEST_IMPORT);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("http://www.meizu.com"));
-            startActivity(intent);
+            startActivityForResult(new Intent(this, ScanActivity.class), REQUEST_IMPORT);
         }
     }
 

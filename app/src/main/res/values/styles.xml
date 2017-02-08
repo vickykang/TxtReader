@@ -49,6 +49,13 @@
         <item name="android:layout_width">@dimen/pb_width</item>
         <item name="android:layout_height">@dimen/pb_width</item>
     </style>
+    
+    <style name="ProgressBar.Horizontal" parent="android:Widget.Holo.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:minHeight">6dip</item>
+        <item name="android:maxHeight">15dip</item>
+        <item name="android:progressDrawable">@drawable/progress_horizontal</item>
+    </style>
 
     <style name="BottomDialog" parent="android:Theme.Holo.Dialog.NoActionBar">
         <item name="android:windowFrame">@null</item>
@@ -65,6 +72,12 @@
     <style name="Animation.AppCompat.Light.ShowAtBottom" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
+
+    <style name="ChapterActivityStyle" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Light.ShowAtBottom</item>
     </style>
 
 </resources>

@@ -46,19 +46,19 @@ public class DataManager {
         mBookCache = new BookLruCache(FileUtils.ONE_MB * memory / 8);
     }
 
-    public Book getBook(String path) {
-        Book book = mBookCache.get(path);
+    public Book getBook(long id) {
+        Book book = mBookCache.get(id);
         if (book == null) {
             Cursor cursor = null;
             try {
                 cursor = mResolver.query(ReaderProvider.CONTENT_URI_BOOK, null,
-                        Columns.COLUMN_PATH + " =?", new String[]{path}, null, null);
+                        Columns._ID + " =?", new String[]{String.valueOf(id)}, null, null);
                 if (cursor != null && cursor.moveToFirst()) {
                     book = getBookFromCursor(cursor);
                     if (book == null) {
                         return null;
                     }
-                    mBookCache.put(book.getPath(), book);
+                    mBookCache.put(book.getId(), book);
                 }
             } finally {
                 if (cursor != null) {
@@ -69,8 +69,8 @@ public class DataManager {
         return book;
     }
 
-    public Map<String, Book> getAllBooks() {
-        Map<String, Book> books = mBookCache.snapshot();
+    public Map<Long, Book> getAllBooks() {
+        Map<Long, Book> books = mBookCache.snapshot();
         if (books != null) {
             Cursor cursor = null;
             try {
@@ -83,8 +83,8 @@ public class DataManager {
                 while (cursor.moveToNext()) {
                     Book book = getBookFromCursor(cursor);
                     if (book != null) {
-                        books.put(book.getPath(), book);
-                        mBookCache.put(book.getPath(), book);
+                        books.put(book.getId(), book);
+                        mBookCache.put(book.getId(), book);
                     }
                 }
             } finally {
@@ -116,7 +116,7 @@ public class DataManager {
         Uri uri = mResolver.insert(ReaderProvider.CONTENT_URI_BOOK, values);
         book.setId(ContentUris.parseId(uri));
 
-        mBookCache.put(book.getPath(), book);
+        mBookCache.put(book.getId(), book);
 
         return book;
     }
@@ -124,7 +124,7 @@ public class DataManager {
     public boolean removeBookFromShelf(Book book) {
         int count = mResolver.delete(ReaderProvider.CONTENT_URI_BOOK, Columns._ID + " = ?",
                 new String[]{String.valueOf(book.getId())});
-        mBookCache.remove(book.getPath());
+        mBookCache.remove(book.getId());
         return count > 0;
     }
 
@@ -133,7 +133,11 @@ public class DataManager {
     }
 
     public boolean isImported(String path) {
-        return getBook(path) != null;
+        return false;
+    }
+
+    public boolean isImported(long id) {
+        return id > 0 && getBook(id) != null;
     }
 
     private Book getBookFromCursor(Cursor cursor) {
@@ -155,7 +159,7 @@ public class DataManager {
                 insertChapter(book.getId(), c);
             }
             book.setChapters(chapters);
-            mBookCache.put(book.getPath(), book);
+            mBookCache.put(book.getId(), book);
         }
     }
 
@@ -168,7 +172,7 @@ public class DataManager {
         values.put(Columns.COLUMN_CHAPTER_INDEX, chapter.getIndex());
         values.put(Columns.COLUMN_CHAPTER_START, chapter.getStart());
         values.put(Columns.COLUMN_CHAPTER_END, chapter.getEnd());
-        mResolver.insert(ReaderProvider.CONTENT_URI_BOOK, values);
+        mResolver.insert(ReaderProvider.CONTENT_URI_CHAPTER, values);
     }
 
     public void updateTime(Book book) {
@@ -177,7 +181,7 @@ public class DataManager {
         }
         long time = SystemClock.currentThreadTimeMillis();
         book.setUpdateTime(time);
-        mBookCache.put(book.getPath(), book);
+        mBookCache.put(book.getId(), book);
 
         ContentValues values = new ContentValues();
         values.put(Columns.COLUMN_UPDATED, time);
