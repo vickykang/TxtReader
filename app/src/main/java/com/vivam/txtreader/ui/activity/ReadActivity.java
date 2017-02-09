@@ -20,6 +20,7 @@ import com.vivam.txtreader.data.DataManager;
 import com.vivam.txtreader.data.EventBus;
 import com.vivam.txtreader.data.event.ChapterEvent;
 import com.vivam.txtreader.data.event.ChapterMatchedEvent;
+import com.vivam.txtreader.data.event.SeekPageEvent;
 import com.vivam.txtreader.data.model.Book;
 import com.vivam.txtreader.data.model.Chapter;
 import com.vivam.txtreader.thread.PaginateWork;
@@ -36,6 +37,7 @@ public class ReadActivity extends AppCompatActivity
     private static final String TAG = "ReadActivity";
 
     public static final String EXTRA_BOOK = "book";
+    public static final String EXTRA_CURRENT_CHAPTER = "current_chapter";
 
     public static final int REQUEST_CHAPTER_LIST = 0x2;
 
@@ -50,6 +52,7 @@ public class ReadActivity extends AppCompatActivity
     private PaginateWork mWork;
 
     private Book mBook;
+    private List<Chapter> mChapters;
 
     private DataManager mDataManager;
 
@@ -138,9 +141,9 @@ public class ReadActivity extends AppCompatActivity
 
     @Subscribe
     public void onChapterMatched(ChapterMatchedEvent event) {
-        List<Chapter> chapters = event.getChapters();
-        if (chapters != null && chapters.size() > 0) {
-            mDataManager.insertChapters(mBook, chapters);
+        mChapters = event.getChapters();
+        if (mChapters != null && mChapters.size() > 0) {
+            mDataManager.insertChapters(mBook, mChapters);
         }
     }
 
@@ -153,6 +156,40 @@ public class ReadActivity extends AppCompatActivity
         } else {
             notifyState(Constants.STATE_EMPTY);
         }
+    }
+
+    @Subscribe
+    public void onPageSought(SeekPageEvent event) {
+        int current = event.getPage();
+        if (mPager != null && mAdapter != null && current >= 0 && current < mAdapter.getCount()) {
+            mPager.setCurrentItem(current);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CHAPTER_LIST && resultCode == RESULT_OK && data != null) {
+            long chapterId = data.getLongExtra(EXTRA_CURRENT_CHAPTER, 0L);
+            Chapter currentChapter = getChapter(chapterId);
+            if (currentChapter != null && mPager != null && mAdapter != null
+                    && currentChapter.getStartPage() >= 0
+                    && currentChapter.getStartPage() < mAdapter.getCount()) {
+                mPager.setCurrentItem(currentChapter.getStartPage());
+            }
+        }
+    }
+
+    private Chapter getChapter(long id) {
+        if (mChapters == null) {
+            return null;
+        }
+
+        for (Chapter chapter : mChapters) {
+            if (id == chapter.getId()) {
+                return chapter;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -172,7 +209,7 @@ public class ReadActivity extends AppCompatActivity
                 }
                 ft.addToBackStack(null);
                 ReadSettingsDialogFragment fragment = ReadSettingsDialogFragment
-                        .newInstance(mBook.getId());
+                        .newInstance(mBook.getId(), mAdapter.getCount(), mPager.getCurrentItem());
                 fragment.show(ft, "dialog");
                 break;
 

@@ -11,6 +11,7 @@ public class Chapter extends BaseModel {
     ArrayList<String> pages;
     int start;
     int end;
+    int StartPage;
 
     public Chapter() {
 
@@ -70,5 +71,13 @@ public class Chapter extends BaseModel {
 
     public void setEnd(int end) {
         this.end = end;
+    }
+
+    public int getStartPage() {
+        return StartPage;
+    }
+
+    public void setStartPage(int startPage) {
+        StartPage = startPage;
     }
 }

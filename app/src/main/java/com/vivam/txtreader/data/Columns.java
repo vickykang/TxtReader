@@ -16,6 +16,10 @@ public class Columns implements BaseColumns {
     public static final String COLUMN_CREATED = "created";
     /** the time book updated */
     public static final String COLUMN_UPDATED = "updated";
+    /** the id of chapter that read last time */
+    public static final String COLUMN_CURRENT_CHAPTER = "current_chapter";
+    /** the start position of page that read last time */
+    public static final String COLUMN_LAST_POSITION = "last_position";
 
     /** the book id of chapter */
     public static final String COLUMN_BOOK_ID = "book_id";

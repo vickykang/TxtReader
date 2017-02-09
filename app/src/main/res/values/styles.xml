@@ -74,10 +74,4 @@
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
 
-    <style name="ChapterActivityStyle" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
-        <item name="android:windowBackground">@null</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Light.ShowAtBottom</item>
-    </style>
-
 </resources>

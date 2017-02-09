@@ -1,10 +1,11 @@
 package com.vivam.txtreader.ui.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.vivam.txtreader.R;
 import com.vivam.txtreader.data.DataManager;
 import com.vivam.txtreader.data.model.Book;
 import com.vivam.txtreader.data.model.Chapter;
+import com.vivam.txtreader.ui.activity.ReadActivity;
 
 import java.util.List;
 
@@ -105,8 +107,10 @@ public class ChapterListFragment extends Fragment implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // TODO: go to selected chapter
         if (getActivity() != null) {
+            Intent intent = new Intent();
+            intent.putExtra(ReadActivity.EXTRA_CURRENT_CHAPTER, mChapters.get(position).getId());
+            getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
         }
     }

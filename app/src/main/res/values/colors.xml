@@ -32,6 +32,6 @@
 
     <color name="bg_progress_horizontal">#769aa9a8</color>
 
-    <color name="bg_chapter">#dbc7a6</color>
-    <color name="divider_chapter">#d5b884</color>
+    <color name="bg_chapter">#f2f2f2</color>
+    <color name="divider_chapter">#c5c5c5</color>
 </resources>

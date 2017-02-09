@@ -55,8 +55,11 @@ public class PaginateThread extends Thread {
             return;
         }
 
+        int offset = 0;
         for (Chapter chapter : mChapters) {
+            chapter.setStartPage(offset);
             paginate(chapter);
+            offset += chapter.getPages() != null ? chapter.getPages().size() : 0;
             mHandler.obtainMessage(PaginateWork.MSG_PAGINATED_ONE, chapter).sendToTarget();
         }
 

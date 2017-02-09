@@ -172,7 +172,8 @@ public class DataManager {
         values.put(Columns.COLUMN_CHAPTER_INDEX, chapter.getIndex());
         values.put(Columns.COLUMN_CHAPTER_START, chapter.getStart());
         values.put(Columns.COLUMN_CHAPTER_END, chapter.getEnd());
-        mResolver.insert(ReaderProvider.CONTENT_URI_CHAPTER, values);
+        Uri uri = mResolver.insert(ReaderProvider.CONTENT_URI_CHAPTER, values);
+        chapter.setId(ContentUris.parseId(uri));
     }
 
     public void updateTime(Book book) {

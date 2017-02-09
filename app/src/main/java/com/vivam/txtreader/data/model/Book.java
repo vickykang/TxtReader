@@ -8,6 +8,8 @@ public class Book extends BookFile {
     long createTime;
     long updateTime;
     List<Chapter> chapters;
+    long currentChapterId;
+    int lastPosition;
 
     public Book() {
     }
@@ -53,5 +55,21 @@ public class Book extends BookFile {
 
     public void setChapters(List<Chapter> chapters) {
         this.chapters = chapters;
+    }
+
+    public long getCurrentChapterId() {
+        return currentChapterId;
+    }
+
+    public void setCurrentChapterId(long currentChapterId) {
+        this.currentChapterId = currentChapterId;
+    }
+
+    public int getLastPosition() {
+        return lastPosition;
+    }
+
+    public void setLastPosition(int lastPosition) {
+        this.lastPosition = lastPosition;
     }
 }
