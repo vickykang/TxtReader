@@ -31,6 +31,8 @@ public class ReadSettingsDialogFragment extends DialogFragment
     private ImageView mChapterButton;
     private ImageView mTextFormatButton;
     private ImageView mBackgroundButton;
+    private View mTextFormatView;
+    private SeekBar mFontSeekBar;
 
     private long mBookId;
     private int mTotalPages;
@@ -78,6 +80,8 @@ public class ReadSettingsDialogFragment extends DialogFragment
         mChapterButton = (ImageView) view.findViewById(R.id.btn_chapter);
         mTextFormatButton = (ImageView) view.findViewById(R.id.btn_text_format);
         mBackgroundButton = (ImageView) view.findViewById(R.id.btn_background);
+        mTextFormatView = view.findViewById(R.id.container_text_format);
+        mFontSeekBar = (SeekBar) view.findViewById(R.id.seek_bar_font);
 
         mSeekBar.setOnSeekBarChangeListener(this);
         mChapterButton.setOnClickListener(this);
@@ -86,6 +90,12 @@ public class ReadSettingsDialogFragment extends DialogFragment
 
         initData();
         syncView();
+    }
+
+    private void initFontSeekBar() {
+        mFontSeekBar.setMax(5);
+        mFontSeekBar.incrementProgressBy(1);
+
     }
 
     private void initData() {
@@ -100,6 +110,7 @@ public class ReadSettingsDialogFragment extends DialogFragment
     private void syncView() {
         mSeekBar.setMax(mTotalPages);
         mSeekBar.setProgress(mCurrentPage);
+        mTextFormatView.setVisibility(View.GONE);
     }
 
     @Override
@@ -115,6 +126,12 @@ public class ReadSettingsDialogFragment extends DialogFragment
                 dismiss();
                 break;
             case R.id.btn_text_format:
+                boolean visible = mTextFormatView.getVisibility() == View.VISIBLE;
+                if (visible) {
+                    mTextFormatView.setVisibility(View.GONE);
+                } else {
+                    mTextFormatView.setVisibility(View.VISIBLE);
+                }
                 break;
             case R.id.btn_background:
                 break;
@@ -123,11 +140,6 @@ public class ReadSettingsDialogFragment extends DialogFragment
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (!fromUser) {
-            return;
-        }
-        mCurrentPage = progress;
-        EventBus.post(new SeekPageEvent(mCurrentPage));
     }
 
     @Override
@@ -137,6 +149,13 @@ public class ReadSettingsDialogFragment extends DialogFragment
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        int id = seekBar.getId();
+        int progress = seekBar.getProgress();
+        if (id == R.id.seek_bar) {
+            mCurrentPage = progress;
+            EventBus.post(new SeekPageEvent(mCurrentPage));
+        } else if (id == R.id.seek_bar_font) {
 
+        }
     }
 }

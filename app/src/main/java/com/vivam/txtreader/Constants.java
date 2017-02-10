@@ -33,4 +33,6 @@ public class Constants {
     public static final int STATE_LOADING = 0;
     public static final int STATE_EMPTY = 1;
     public static final int STATE_SUCCESS = 2;
+
+    public static final int FONT_OFFSET = 2;
 }
